@@ -1,6 +1,5 @@
 <script setup>
 	import { computed } from 'vue';
-	import { Link } from '@inertiajs/vue3';
 
 	const props = defineProps([
 		'tableColumn',
@@ -10,6 +9,7 @@
 
 	const emit = defineEmits([
 		'update:tableColumn',
+		'update:tablePage',
 	])
 
 	const tableColumn = computed(() => {
@@ -29,7 +29,7 @@
 			{
 				name: 'Registered At',
 				attributeName: 'registeredAt',
-				showWhenScreenIsEqualOrGreaterThan: 'sm',
+				showOnlyWhenScreenIsEqualOrGreaterThan: 'sm',
 				isStacked: true,
 				isSort: true,
 				sortPriority: 1,
@@ -38,7 +38,7 @@
 			{
 				name: 'Unregistered At',
 				attributeName: 'unregisteredAt',
-				showWhenScreenIsEqualOrGreaterThan: 'sm',
+				showOnlyWhenScreenIsEqualOrGreaterThan: 'sm',
 				isStacked: true,
 				isSort: true,
 				sortPriority: 2,
@@ -206,18 +206,18 @@
 				<tr>
 					<th v-for="column in tableColumn" scope="col" class="py-4 px-4 text-left text-sm font-semibold text-gray-900 sm:pl-0 cursor-pointer"
 						:class="{
-							'hidden sm:table-cell': column.showWhenScreenIsEqualOrGreaterThan === 'sm',
-							'hidden md:table-cell': column.showWhenScreenIsEqualOrGreaterThan === 'md',
-							'hidden lg:table-cell': column.showWhenScreenIsEqualOrGreaterThan === 'lg',
-							'hidden xl:table-cell': column.showWhenScreenIsEqualOrGreaterThan === 'xl',
-							'hidden 2xl:table-cell': column.showWhenScreenIsEqualOrGreaterThan === '2xl',
+							'hidden sm:table-cell': column.showOnlyWhenScreenIsEqualOrGreaterThan === 'sm',
+							'hidden md:table-cell': column.showOnlyWhenScreenIsEqualOrGreaterThan === 'md',
+							'hidden lg:table-cell': column.showOnlyWhenScreenIsEqualOrGreaterThan === 'lg',
+							'hidden xl:table-cell': column.showOnlyWhenScreenIsEqualOrGreaterThan === 'xl',
+							'hidden 2xl:table-cell': column.showOnlyWhenScreenIsEqualOrGreaterThan === '2xl',
 						}"
 						@click="sort(column, $event)"
 					>
 						<button type="button" class="focus:outline-none">{{ column.name }}</button>
 						<i v-if="column.isSort && column.sortOrientation == 'ASC'" class="fa-solid fa-sort-up fa-fw text-indigo-600"></i> 
 						<i v-if="column.isSort && column.sortOrientation == 'DESC'" class="fa-solid fa-sort-down fa-fw text-indigo-600"></i>
-						<button type="button" class="text-[10px] text-indigo-600 focus:outline-none">{{ column.sortPriority }}</button>
+						<button type="button" v-if="column.isSort" class="text-[10px] text-indigo-600 focus:outline-none">{{ column.sortPriority }}</button>
 					</th>
 				</tr>
 			</thead>
@@ -226,11 +226,11 @@
 					<td v-for="column in tableColumn" class="py-4 pl-4 pr-4 text-sm text-gray-500 sm:pl-0"
 						:class="{
 							'font-medium text-gray-900': column.isBold,
-							'hidden sm:table-cell': column.showWhenScreenIsEqualOrGreaterThan === 'sm',
-							'hidden md:table-cell': column.showWhenScreenIsEqualOrGreaterThan === 'md',
-							'hidden lg:table-cell': column.showWhenScreenIsEqualOrGreaterThan === 'lg',
-							'hidden xl:table-cell': column.showWhenScreenIsEqualOrGreaterThan === 'xl',
-							'hidden 2xl:table-cell': column.showWhenScreenIsEqualOrGreaterThan === '2xl',
+							'hidden sm:table-cell': column.showOnlyWhenScreenIsEqualOrGreaterThan === 'sm',
+							'hidden md:table-cell': column.showOnlyWhenScreenIsEqualOrGreaterThan === 'md',
+							'hidden lg:table-cell': column.showOnlyWhenScreenIsEqualOrGreaterThan === 'lg',
+							'hidden xl:table-cell': column.showOnlyWhenScreenIsEqualOrGreaterThan === 'xl',
+							'hidden 2xl:table-cell': column.showOnlyWhenScreenIsEqualOrGreaterThan === '2xl',
 						}"
 					>
 						{{ data[column.attributeName] }}
@@ -239,11 +239,11 @@
 								<dd class="mt-1 truncate text-gray-500"
 									v-if="stackedColumn.attributeName !== column.attributeName"
 									:class="{
-										'sm:hidden': stackedColumn.showWhenScreenIsEqualOrGreaterThan === 'sm',
-										'md:hidden': stackedColumn.showWhenScreenIsEqualOrGreaterThan === 'md',
-										'lg:hidden': stackedColumn.showWhenScreenIsEqualOrGreaterThan === 'lg',
-										'xl:hidden': stackedColumn.showWhenScreenIsEqualOrGreaterThan === 'xl',
-										'2xl:hidden': stackedColumn.showWhenScreenIsEqualOrGreaterThan === '2xl',
+										'sm:hidden': stackedColumn.showOnlyWhenScreenIsEqualOrGreaterThan === 'sm',
+										'md:hidden': stackedColumn.showOnlyWhenScreenIsEqualOrGreaterThan === 'md',
+										'lg:hidden': stackedColumn.showOnlyWhenScreenIsEqualOrGreaterThan === 'lg',
+										'xl:hidden': stackedColumn.showOnlyWhenScreenIsEqualOrGreaterThan === 'xl',
+										'2xl:hidden': stackedColumn.showOnlyWhenScreenIsEqualOrGreaterThan === '2xl',
 									}"
 								>{{ stackedColumn.name }}: {{ data[stackedColumn.attributeName] }}</dd>
 							</template>
@@ -273,52 +273,54 @@
 				<div>
 					<nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
 						<!-- First Page Button -->
-						<Link :href="tablePagination.prevPageUrl ? tablePagination.firstPageUrl : '#'" class="relative flex w-12 items-center justify-center rounded-l-md text-sm text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+						<button type="button" @click="$emit('update:tablePage', 1)" class="relative flex w-12 items-center justify-center cursor-pointer rounded-l-md text-sm text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
 							:class="{
 								'pointer-events-none cursor-not-allowed': tablePagination.prevPageUrl === null || tablePagination.prevPageUrl === undefined,
 							}"
-						preserve-scroll>
+						>
 							<i class="fa-solid fa-angles-left fa-fw"></i>
 							<i v-if="tablePagination.prevPageUrl === null || tablePagination.prevPageUrl === undefined" class="fa-regular fa-ban absolute text-2xl text-gray-400 fa-fw"></i>
-						</Link>
+						</button>
 
 						<!-- Previous Page Button -->
-						<Link :href="tablePagination.prevPageUrl ?? '#'" class="relative flex w-12 items-center justify-center text-gray-400 text-sm font-semibold ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+						<button type="button" @click="$emit('update:tablePage', tablePagination.currentPage - 1)" class="relative flex w-12 items-center justify-center text-gray-400 text-sm font-semibold ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
 							:class="{
 								'pointer-events-none cursor-not-allowed': tablePagination.prevPageUrl === null || tablePagination.prevPageUrl === undefined,
 							}"
-						preserve-scroll>
+						>
 							<i class="fa-solid fa-angle-left fa-fw"></i>
 							<i v-if="tablePagination.prevPageUrl === null || tablePagination.prevPageUrl === undefined" class="fa-regular fa-ban absolute text-2xl text-gray-400 fa-fw"></i>
-						</Link>
+						</button>
 						
 						<!-- Pages Button -->
-						<Link v-for="link in tablePagination.links" :href="link.url ?? '#'" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+						<button type="button" v-for="link in tablePagination.links" @click="$emit('update:tablePage', link.label)" class="relative inline-flex items-center cursor-pointer px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
 							:class="{
 								'pointer-events-none cursor-not-allowed': link.url === null || link.url === undefined,
 								'z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 hover:bg-indigo-600': link.active,
 							}"
-						preserve-scroll>{{ link.label }}</Link>
+						>
+							{{ link.label }}
+						</button>
 						
 						<!-- Next Page Button -->
-						<Link :href="tablePagination.nextPageUrl ?? '#'" class="relative flex w-12 items-center justify-center text-sm font-semibold text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+						<button type="button" @click="$emit('update:tablePage', tablePagination.currentPage + 1)" class="relative flex w-12 items-center justify-center cursor-pointer text-sm font-semibold text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
 							:class="{
 								'pointer-events-none cursor-not-allowed': tablePagination.nextPageUrl === null || tablePagination.nextPageUrl === undefined,
 							}"
-						preserve-scroll>
+						>
 							<i class="fa-solid fa-angle-right fa-fw"></i>
 							<i v-if="tablePagination.nextPageUrl === null || tablePagination.nextPageUrl === undefined" class="fa-regular fa-ban absolute text-2xl text-gray-400 fa-fw"></i>
-						</Link>
+						</button>
 
 						<!-- Last Page Button -->
-						<Link :href="tablePagination.nextPageUrl ? tablePagination.lastPageUrl : '#'" class="relative flex w-12 items-center justify-center text-sm rounded-r-md text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+						<button type="button" @click="$emit('update:tablePage', tablePagination.lastPage)" class="relative flex w-12 items-center justify-center cursor-pointer text-sm rounded-r-md text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
 							:class="{
 								'pointer-events-none cursor-not-allowed': tablePagination.nextPageUrl === null || tablePagination.nextPageUrl === undefined,
 							}"
-						preserve-scroll>
+						>
 							<i class="fa-solid fa-angles-right fa-fw"></i>
 							<i v-if="tablePagination.nextPageUrl === null || tablePagination.nextPageUrl === undefined" class="fa-regular fa-ban absolute text-2xl text-gray-400 fa-fw"></i>
-						</Link>
+						</button>
 					</nav>
 				</div>
 			</div>
