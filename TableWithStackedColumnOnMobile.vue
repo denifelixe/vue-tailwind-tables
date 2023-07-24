@@ -222,6 +222,11 @@
 				</tr>
 			</thead>
 			<tbody class="divide-y divide-gray-200 bg-white">
+				<tr v-if="tableData.length === 0">
+					<td :colspan="tableColumn.length" class="py-4 pl-4 pr-4 text-sm text-gray-500 sm:pl-0">
+						No data found.
+					</td>
+				</tr>
 				<tr v-for="data in tableData">
 					<td v-for="column in tableColumn" class="py-4 pl-4 pr-4 text-sm text-gray-500 sm:pl-0"
 						:class="{
