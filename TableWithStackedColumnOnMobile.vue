@@ -201,10 +201,10 @@
 	<!-- This component is from TailwindUI -->
     <!-- https://tailwindui.com/components/application-ui/lists/tables#component-e56f750c63d4e53a24f5f0bf9fd7b52a -->
 	<div class="-mx-4 sm:-mx-0">
-		<table class="min-w-full divide-y divide-gray-300">
+		<table class="min-w-full divide-y divide-gray-300 dark:divide-gray-600">
 			<thead>
-				<tr>
-					<th v-for="column in tableColumn" scope="col" class="py-4 px-4 text-left text-sm font-semibold text-gray-900 sm:pl-0 cursor-pointer"
+				<tr class="!bg-transparent text-gray-900 dark:!text-gray-400 dark:!bg-transparent">
+					<th v-for="column in tableColumn" scope="col" class="py-4 px-4 text-left text-sm font-semibold sm:pl-0 cursor-pointer"
 						:class="{
 							'hidden sm:table-cell': column.showOnlyWhenScreenIsEqualOrGreaterThan === 'sm',
 							'hidden md:table-cell': column.showOnlyWhenScreenIsEqualOrGreaterThan === 'md',
@@ -221,16 +221,16 @@
 					</th>
 				</tr>
 			</thead>
-			<tbody class="divide-y divide-gray-200 bg-white">
+			<tbody class="divide-y divide-gray-200 bg-transparent">
 				<tr v-if="tableData.length === 0">
-					<td :colspan="tableColumn.length" class="py-4 pl-4 pr-4 text-sm text-gray-500 sm:pl-0">
+					<td :colspan="tableColumn.length" class="py-4 pl-4 pr-4 text-sm text-gray-500 dark:text-gray-400 sm:pl-0">
 						No data found.
 					</td>
 				</tr>
 				<tr v-for="data in tableData">
 					<td v-for="column in tableColumn" class="py-4 pl-4 pr-4 text-sm text-gray-500 sm:pl-0"
 						:class="{
-							'font-medium text-gray-900': column.isBold,
+							'font-medium text-gray-900 dark:text-gray-400': column.isBold,
 							'hidden sm:table-cell': column.showOnlyWhenScreenIsEqualOrGreaterThan === 'sm',
 							'hidden md:table-cell': column.showOnlyWhenScreenIsEqualOrGreaterThan === 'md',
 							'hidden lg:table-cell': column.showOnlyWhenScreenIsEqualOrGreaterThan === 'lg',
@@ -258,14 +258,14 @@
 			</tbody>
 		</table>
 
-		<div class="flex items-center justify-between border-t border-gray-200 bg-white py-4 px-4 sm:px-0">
+		<div class="flex items-center justify-between border-t border-gray-200 dark:border-gray-600 bg-transparent py-4 px-4 sm:px-0">
 			<div class="flex flex-1 justify-between sm:hidden">
 				<a href="#" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</a>
 				<a href="#" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</a>
 			</div>
 			<div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
 				<div>
-					<p class="text-sm text-gray-700">
+					<p class="text-sm text-gray-700 dark:text-gray-400">
 						Showing
 						<span class="font-medium">{{ tablePagination.from }}</span>
 						to
@@ -278,53 +278,53 @@
 				<div>
 					<nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
 						<!-- First Page Button -->
-						<button type="button" @click="$emit('update:tablePage', 1)" class="relative flex w-12 items-center justify-center cursor-pointer rounded-l-md text-sm text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+						<button type="button" @click="$emit('update:tablePage', 1)" class="relative flex w-12 items-center justify-center cursor-pointer rounded-l-md text-sm text-gray-400 dark:text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
 							:class="{
 								'pointer-events-none cursor-not-allowed': tablePagination.prevPageUrl === null || tablePagination.prevPageUrl === undefined,
 							}"
 						>
 							<i class="fa-solid fa-angles-left fa-fw"></i>
-							<i v-if="tablePagination.prevPageUrl === null || tablePagination.prevPageUrl === undefined" class="fa-regular fa-ban absolute text-2xl text-gray-400 fa-fw"></i>
+							<i v-if="tablePagination.prevPageUrl === null || tablePagination.prevPageUrl === undefined" class="fa-regular fa-ban absolute text-2xl text-gray-400 dark:text-gray-500 fa-fw"></i>
 						</button>
 
 						<!-- Previous Page Button -->
-						<button type="button" @click="$emit('update:tablePage', tablePagination.currentPage - 1)" class="relative flex w-12 items-center justify-center text-gray-400 text-sm font-semibold ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+						<button type="button" @click="$emit('update:tablePage', tablePagination.currentPage - 1)" class="relative flex w-12 items-center justify-center text-gray-400 dark:text-gray-400 text-sm font-semibold ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
 							:class="{
 								'pointer-events-none cursor-not-allowed': tablePagination.prevPageUrl === null || tablePagination.prevPageUrl === undefined,
 							}"
 						>
 							<i class="fa-solid fa-angle-left fa-fw"></i>
-							<i v-if="tablePagination.prevPageUrl === null || tablePagination.prevPageUrl === undefined" class="fa-regular fa-ban absolute text-2xl text-gray-400 fa-fw"></i>
+							<i v-if="tablePagination.prevPageUrl === null || tablePagination.prevPageUrl === undefined" class="fa-regular fa-ban absolute text-2xl text-gray-400 dark:text-gray-500 fa-fw"></i>
 						</button>
 						
 						<!-- Pages Button -->
-						<button type="button" v-for="link in tablePagination.links" @click="$emit('update:tablePage', link.label)" class="relative inline-flex items-center cursor-pointer px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+						<button type="button" v-for="link in tablePagination.links" @click="$emit('update:tablePage', link.label)" class="relative inline-flex items-center cursor-pointer px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
 							:class="{
 								'pointer-events-none cursor-not-allowed': link.url === null || link.url === undefined,
-								'z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 hover:bg-indigo-600': link.active,
+								'z-10 bg-indigo-600 text-white dark:text-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 hover:bg-indigo-600': link.active,
 							}"
 						>
 							{{ link.label }}
 						</button>
 						
 						<!-- Next Page Button -->
-						<button type="button" @click="$emit('update:tablePage', tablePagination.currentPage + 1)" class="relative flex w-12 items-center justify-center cursor-pointer text-sm font-semibold text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+						<button type="button" @click="$emit('update:tablePage', tablePagination.currentPage + 1)" class="relative flex w-12 items-center justify-center cursor-pointer text-sm font-semibold text-gray-400 dark:text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
 							:class="{
 								'pointer-events-none cursor-not-allowed': tablePagination.nextPageUrl === null || tablePagination.nextPageUrl === undefined,
 							}"
 						>
 							<i class="fa-solid fa-angle-right fa-fw"></i>
-							<i v-if="tablePagination.nextPageUrl === null || tablePagination.nextPageUrl === undefined" class="fa-regular fa-ban absolute text-2xl text-gray-400 fa-fw"></i>
+							<i v-if="tablePagination.nextPageUrl === null || tablePagination.nextPageUrl === undefined" class="fa-regular fa-ban absolute text-2xl text-gray-400 dark:text-gray-500 fa-fw"></i>
 						</button>
 
 						<!-- Last Page Button -->
-						<button type="button" @click="$emit('update:tablePage', tablePagination.lastPage)" class="relative flex w-12 items-center justify-center cursor-pointer text-sm rounded-r-md text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+						<button type="button" @click="$emit('update:tablePage', tablePagination.lastPage)" class="relative flex w-12 items-center justify-center cursor-pointer text-sm rounded-r-md text-gray-400 dark:text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-500 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
 							:class="{
 								'pointer-events-none cursor-not-allowed': tablePagination.nextPageUrl === null || tablePagination.nextPageUrl === undefined,
 							}"
 						>
 							<i class="fa-solid fa-angles-right fa-fw"></i>
-							<i v-if="tablePagination.nextPageUrl === null || tablePagination.nextPageUrl === undefined" class="fa-regular fa-ban absolute text-2xl text-gray-400 fa-fw"></i>
+							<i v-if="tablePagination.nextPageUrl === null || tablePagination.nextPageUrl === undefined" class="fa-regular fa-ban absolute text-2xl text-gray-400 dark:text-gray-500 fa-fw"></i>
 						</button>
 					</nav>
 				</div>
