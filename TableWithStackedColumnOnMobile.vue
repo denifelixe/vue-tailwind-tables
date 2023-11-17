@@ -215,9 +215,9 @@
 						@click="sort(column, $event)"
 					>
 						<button type="button" class="focus:outline-none">{{ column.name }}</button>
-						<i v-if="column.isSort && column.sortOrientation == 'ASC'" class="fa-solid fa-sort-up fa-fw text-indigo-600"></i> 
-						<i v-if="column.isSort && column.sortOrientation == 'DESC'" class="fa-solid fa-sort-down fa-fw text-indigo-600"></i>
-						<button type="button" v-if="column.isSort" class="text-[10px] text-indigo-600 focus:outline-none">{{ column.sortPriority }}</button>
+						<i v-if="column.isSort && column.sortOrientation == 'ASC'" class="fa-solid fa-sort-up fa-fw text-indigo-600 dark:text-indigo-400"></i> 
+						<i v-if="column.isSort && column.sortOrientation == 'DESC'" class="fa-solid fa-sort-down fa-fw text-indigo-600 dark:text-indigo-400"></i>
+						<button type="button" v-if="column.isSort" class="text-[10px] text-indigo-600 dark:text-indigo-400 focus:outline-none">{{ column.sortPriority }}</button>
 					</th>
 				</tr>
 			</thead>
